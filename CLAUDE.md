@@ -9,7 +9,7 @@ the final, winners get a fixed XRP prize. See README.md for setup and season ope
 - Supabase: magic-link auth through `@supabase/ssr`; all table access through the service role client `db()` in
   `src/lib/supabase/server.ts`. RLS is on with no policies, so never query tables from the browser.
 - Stripe Checkout for section purchases. The webhook (`/api/stripe/webhook`) is the only thing that assigns a section.
-- Game rules that must be atomic live in Postgres functions in `supabase/migrations/0001_init.sql`:
+- Game rules that must be atomic live in Postgres functions under `supabase/migrations/` (0001 defines them, later files replace some):
   `hold_section`, `complete_order`, `expire_order`, `next_matchup`, `cast_vote`, `bump_visit`, `bump_click`.
 
 ## Rules to keep
