@@ -7,7 +7,7 @@ Stack: Next.js (App Router), Supabase (auth + Postgres), Stripe Checkout, Vercel
 
 ## Setup
 
-1. **Supabase.** Create a project. In the SQL editor run `supabase/migrations/0001_init.sql`, then edit and run
+1. **Supabase.** Create a project. In the SQL editor run each file in `supabase/migrations/` in order, then edit and run
    `supabase/seed.sql` (dates, prizes and section prices are placeholders).
 2. **Supabase auth.** Authentication > URL configuration: set the Site URL to your domain and add
    `https://YOUR_DOMAIN/auth/callback` (and `http://localhost:3000/auth/callback`) to the redirect URLs.

@@ -34,6 +34,7 @@ export type Ad = {
   kind: string;
   headline: string;
   url: string;
+  image_url: string;
   bg: string;
   fg: string;
   status: 'draft' | 'live' | 'hidden';
@@ -47,6 +48,7 @@ export type PublicAd = {
   brand: string;
   kind: string;
   headline: string;
+  imageUrl: string;
   bg: string;
   fg: string;
   sectionCode: string;
@@ -55,7 +57,7 @@ export type PublicAd = {
 export type StandingRow = PublicAd & { ownerId: string; wins: number; judged: number; winBp: number };
 export type Standings = Record<PrizeCategory, StandingRow[]>;
 
-const AD_COLS = 'id, section_id, owner_id, brand, kind, headline, url, bg, fg, status, visits, clicks';
+const AD_COLS = 'id, section_id, owner_id, brand, kind, headline, url, image_url, bg, fg, status, visits, clicks';
 
 export async function getSeason(): Promise<Season | null> {
   const { data, error } = await db().from('seasons').select('*').eq('is_current', true).maybeSingle();
@@ -87,7 +89,16 @@ export function isOpen(section: Section, userId?: string): boolean {
 }
 
 export function toPublic(ad: Ad, sectionCode: string): PublicAd {
-  return { id: ad.id, brand: ad.brand, kind: ad.kind, headline: ad.headline, bg: ad.bg, fg: ad.fg, sectionCode };
+  return {
+    id: ad.id,
+    brand: ad.brand,
+    kind: ad.kind,
+    headline: ad.headline,
+    imageUrl: ad.image_url,
+    bg: ad.bg,
+    fg: ad.fg,
+    sectionCode,
+  };
 }
 
 export async function getLiveAds(seasonId: string): Promise<Ad[]> {

@@ -80,7 +80,7 @@ export function VotePanel() {
           <div className="pair">
             {[m.a, m.b].map((ad) => (
               <div className="slot" key={ad.id}>
-                <AdCard ad={ad} />
+                <AdCard ad={ad} image={ad.imageUrl} />
                 <div className="row between">
                   <a className="mono small" href={`/out/${ad.id}`} target="_blank" rel="noopener noreferrer nofollow">
                     Visit section {ad.sectionCode}
