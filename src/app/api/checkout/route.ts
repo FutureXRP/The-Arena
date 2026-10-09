@@ -14,6 +14,10 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   if (!isUuid(body?.sectionId)) return NextResponse.json({ error: 'Bad request.' }, { status: 400 });
 
+  if (!process.env.STRIPE_SECRET_KEY) {
+    return NextResponse.json({ error: 'Payments are not set up yet. Check back soon.' }, { status: 503 });
+  }
+
   const season = await getSeason();
   if (!season || season.phase !== 'open') {
     return NextResponse.json({ error: 'Sections are not on sale right now.' }, { status: 409 });
