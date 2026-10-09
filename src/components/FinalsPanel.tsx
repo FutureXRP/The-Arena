@@ -58,7 +58,7 @@ export function FinalsPanel({ finalists, initialPicks, canVote }: Props) {
             <div className="pair">
               {finalists[c.id].map((ad) => (
                 <div className="slot" key={ad.id}>
-                  <AdCard ad={ad} compact />
+                  <AdCard ad={ad} image={ad.imageUrl} compact />
                   <div className="row between">
                     <span className="mono small muted">Section {ad.sectionCode}</span>
                     {canVote && !ad.mine && (

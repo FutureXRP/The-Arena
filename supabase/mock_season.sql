@@ -1,5 +1,5 @@
 -- MOCK SEASON FOR TESTING. Do not run on a live site.
--- Requires 0001_init.sql, 0002_matchup_fixes.sql and seed.sql to have run,
+-- Requires 0001_init.sql, 0002_matchup_fixes.sql, 0003_ad_images.sql and seed.sql to have run,
 -- and for you to have signed in to the site once with v_my_email.
 --
 -- What it does:
@@ -69,12 +69,14 @@ begin
      where id = v_section;
     insert into orders (user_id, section_id, season_id, amount_cents, stripe_session_id, status)
     values (v_me, v_section, v_season, 0, 'mock_' || r.code, 'paid') on conflict do nothing;
-    insert into ads (section_id, season_id, owner_id, brand, kind, headline, url, bg, fg, status)
+    insert into ads (section_id, season_id, owner_id, brand, kind, headline, url, image_url, bg, fg, status)
     values (v_section, v_season, v_me,
       case r.code when 'F-01' then 'FutureXRP' else 'Blair Labs' end,
       case r.code when 'F-01' then 'XRP news and tools' else 'Indie software' end,
-      case r.code when 'F-01' then 'The ledger never sleeps. Neither do we.' else 'Small tools, sharp edges.' end,
-      'https://example.com/', case r.code when 'F-01' then '#0B1D3A' else '#F4F1EA' end,
+      case r.code when 'F-01' then 'The ledger never sleeps. Neither do we.' else 'Small tools. Sharp edges.' end,
+      'https://example.com/',
+      case r.code when 'F-01' then 'https://picsum.photos/seed/futurexrp/960/540' else 'https://picsum.photos/seed/blair-labs/960/540' end,
+      case r.code when 'F-01' then '#0B1D3A' else '#F4F1EA' end,
       case r.code when 'F-01' then '#C6F432' else '#1A1A1A' end, 'live')
     on conflict (section_id) do nothing;
   end loop;
@@ -83,20 +85,20 @@ begin
   i := 0;
   for r in select * from (values
     ('F-02','Nimbus Coffee','Specialty roasters','Wake up on the right side of the cup.','#2B1B12','#FFE8C2', 90),
-    ('F-03','Orbit Fitness','Gyms and classes','Gravity is optional.','#101828','#7DF9FF', 80),
-    ('F-04','Paper Trail','Bookkeeping app','Receipts in, calm out.','#F7F7F2','#1F2937', 70),
-    ('F-05','Kelp & Co','Plant-based snacks','Crunch from the deep.','#0E3B2E','#D9F99D', 75),
-    ('L-02','Lantern Legal','Online legal help','Read the fine print for you.','#1F1F1F','#F5D90A', 60),
-    ('L-03','Hollow Oak','Furniture makers','Built to outlive the trend.','#3B2F2F','#F2E8DC', 65),
-    ('L-04','Pixel Pantry','Meal-kit delivery','Dinner, decoded.','#FFFFFF','#B91C1C', 55),
+    ('F-03','Orbit Fitness','Gyms and classes','Gravity is a suggestion.','#101828','#7DF9FF', 80),
+    ('F-04','Paper Trail','Bookkeeping app','Receipts in. Calm out.','#F7F7F2','#1F2937', 70),
+    ('F-05','Kelp & Co','Plant-based snacks','Snacks from the deep end.','#0E3B2E','#D9F99D', 75),
+    ('L-02','Lantern Legal','Online legal help','We read the fine print so you never have to.','#1F1F1F','#F5D90A', 60),
+    ('L-03','Hollow Oak','Furniture makers','Furniture your grandkids will argue over.','#3B2F2F','#F2E8DC', 65),
+    ('L-04','Pixel Pantry','Meal-kit delivery','Dinner, solved by Tuesday.','#FFFFFF','#B91C1C', 55),
     ('L-05','Tidewater','Travel booking','Go where the map goes quiet.','#0B3954','#BFD7EA', 50),
-    ('L-06','Sprocket','Bike repair','Fixed by Friday.','#1C1C1C','#FF7A00', 45),
-    ('L-07','Mossbank','Personal finance','Grow the boring way.','#0F2A1D','#E0F2E9', 85),
-    ('U-001','Quill','Writing assistant','Say it once, say it well.','#2E1065','#EDE9FE', 40),
+    ('L-06','Sprocket','Bike repair','Fixed by Friday. Guaranteed.','#1C1C1C','#FF7A00', 45),
+    ('L-07','Mossbank','Personal finance','Get rich the boring way.','#0F2A1D','#E0F2E9', 85),
+    ('U-001','Quill','Writing assistant','Say it once. Say it well.','#2E1065','#EDE9FE', 40),
     ('U-002','Bramble','Gardening supplies','Dirt, with ambition.','#14532D','#FEF3C7', 35),
     ('U-003','Halo Audio','Headphones','Hear the room leave.','#111111','#E5E5E5', 95),
     ('U-004','Firefly Tutors','Online tutoring','Lights on for the hard subjects.','#FFFBEB','#7C2D12', 30),
-    ('U-005','Northstar Pets','Pet insurance','For the ones who cannot read the bill.','#1E3A8A','#DBEAFE', 25),
+    ('U-005','Northstar Pets','Pet insurance','Insurance for the one who cannot read the bill.','#1E3A8A','#DBEAFE', 25),
     ('U-006','Crumb','Bakery subscription','Bread arrives. Day improves.','#FDF2F8','#831843', 60)
   ) t(code, brand, kind, headline, bg, fg, str) loop
     i := i + 1;
@@ -112,8 +114,10 @@ begin
            'mock_' || r.code, 'paid'
       from sections s join seasons se on se.id = s.season_id where s.id = v_section
     on conflict do nothing;
-    insert into ads (section_id, season_id, owner_id, brand, kind, headline, url, bg, fg, status, visits, clicks)
-    values (v_section, v_season, v_owner, r.brand, r.kind, r.headline, 'https://example.com/' || lower(r.brand), r.bg, r.fg, 'live',
+    insert into ads (section_id, season_id, owner_id, brand, kind, headline, url, image_url, bg, fg, status, visits, clicks)
+    values (v_section, v_season, v_owner, r.brand, r.kind, r.headline, 'https://example.com/' || lower(r.brand),
+            'https://picsum.photos/seed/' || regexp_replace(lower(r.brand), '[^a-z0-9]+', '-', 'g') || '/960/540',
+            r.bg, r.fg, 'live',
             (random() * 400)::int + 20, (random() * 60)::int + 2)
     on conflict (section_id) do nothing;
   end loop;

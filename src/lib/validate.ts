@@ -18,7 +18,15 @@ export function contrast(a: string, b: string): number {
   return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
 }
 
-export type AdInput = { brand: string; kind: string; headline: string; url: string; bg: string; fg: string };
+export type AdInput = {
+  brand: string;
+  kind: string;
+  headline: string;
+  url: string;
+  image_url: string;
+  bg: string;
+  fg: string;
+};
 
 export function cleanAd(body: unknown): { ok: true; ad: AdInput } | { ok: false; error: string } {
   const b = (body ?? {}) as Record<string, unknown>;
@@ -28,6 +36,7 @@ export function cleanAd(body: unknown): { ok: true; ad: AdInput } | { ok: false;
     kind: text('kind'),
     headline: text('headline'),
     url: text('url'),
+    image_url: text('image_url'),
     bg: text('bg'),
     fg: text('fg'),
   };
@@ -49,6 +58,19 @@ export function cleanAd(body: unknown): { ok: true; ad: AdInput } | { ok: false;
   }
   if (parsed.protocol !== 'https:') return { ok: false, error: 'The link must start with https://' };
   ad.url = parsed.toString();
+
+  // The picture is optional. When present it must be an https link too.
+  if (ad.image_url) {
+    if (ad.image_url.length > LIMITS.url) return { ok: false, error: 'That image link is too long.' };
+    let img: URL;
+    try {
+      img = new URL(ad.image_url);
+    } catch {
+      return { ok: false, error: 'The image link must be a full https:// address.' };
+    }
+    if (img.protocol !== 'https:') return { ok: false, error: 'The image link must start with https://' };
+    ad.image_url = img.toString();
+  }
 
   if (!HEX.test(ad.bg) || !HEX.test(ad.fg)) return { ok: false, error: 'Colors must be 6-digit hex values.' };
   if (contrast(ad.bg, ad.fg) < 4.5) {

@@ -23,5 +23,5 @@ the final, winners get a fixed XRP prize. See README.md for setup and season ope
 
 ## Not built yet
 
-XRP section payments, admin screen, ad images, ad moderation queue, CAPTCHA or stronger voter verification,
+XRP section payments, admin screen, ad image uploads (ads can link an https image for now), ad moderation queue, CAPTCHA or stronger voter verification,
 automated season rollover, results page.

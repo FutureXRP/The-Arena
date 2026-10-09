@@ -11,6 +11,7 @@ export function AdEditor({ ad, sectionCode }: { ad: Ad; sectionCode: string }) {
     kind: ad.kind,
     headline: ad.headline,
     url: ad.url,
+    image_url: ad.image_url,
     bg: ad.bg,
     fg: ad.fg,
   });
@@ -77,6 +78,10 @@ export function AdEditor({ ad, sectionCode }: { ad: Ad; sectionCode: string }) {
             <label htmlFor={`url-${uid}`}>Link (https)</label>
             <input id={`url-${uid}`} type="url" required maxLength={LIMITS.url} placeholder="https://" value={form.url} onChange={(e) => set('url', e.target.value)} />
           </div>
+          <div className="field">
+            <label htmlFor={`img-${uid}`}>Picture link (https, optional)</label>
+            <input id={`img-${uid}`} type="url" maxLength={LIMITS.url} placeholder="https://" value={form.image_url} onChange={(e) => set('image_url', e.target.value)} />
+          </div>
           <div className="row">
             <div className="field">
               <label htmlFor={`bg-${uid}`}>Background</label>
@@ -96,7 +101,7 @@ export function AdEditor({ ad, sectionCode }: { ad: Ad; sectionCode: string }) {
         </form>
         <div>
           <div className="tier-label" style={{ marginTop: 0 }}>Preview</div>
-          <AdCard ad={form} />
+          <AdCard ad={form} image={form.image_url} />
         </div>
       </div>
     </div>

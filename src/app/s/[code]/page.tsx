@@ -20,7 +20,7 @@ async function load(code: string): Promise<{ ad: Ad; code: string } | null> {
   if (!section) return null;
   const { data: ad } = await db()
     .from('ads')
-    .select('id, section_id, owner_id, brand, kind, headline, url, bg, fg, status, visits, clicks')
+    .select('id, section_id, owner_id, brand, kind, headline, url, image_url, bg, fg, status, visits, clicks')
     .eq('section_id', section.id)
     .eq('status', 'live')
     .maybeSingle();
@@ -42,7 +42,7 @@ export default async function SectionPage({ params }: { params: Promise<{ code: 
   return (
     <main className="narrow stack">
       <div className="eyebrow">Section {code}</div>
-      <AdCard ad={ad} />
+      <AdCard ad={ad} image={ad.image_url} />
       <div className="row between">
         <div className="stats">
           <span>Visits <b>{ad.visits + 1}</b></span>

@@ -66,12 +66,20 @@ h1, h2, h3, p { margin: 0; }
 .vote-head p { max-width: 340px; font-size: 15px; color: var(--muted); }
 .pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
 .slot { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
-.ad { border-radius: 8px; min-height: 300px; padding: 32px; display: flex; flex-direction: column; justify-content: space-between; gap: 24px; overflow-wrap: anywhere; }
+.slot > .ad { flex: 1; }
+.ad { border-radius: 8px; min-height: 300px; display: flex; flex-direction: column; overflow: hidden; overflow-wrap: anywhere; }
+.ad-body { flex: 1; padding: 32px; display: flex; flex-direction: column; justify-content: space-between; gap: 24px; }
+.ad-img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: rgba(0, 0, 0, 0.2); }
+.ad.has-img .ad-body { gap: 12px; }
+.ad.has-img .ad-headline { font-size: clamp(24px, 2.6vw, 32px); }
 .ad-kind { font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; }
 .ad-headline { font-size: clamp(28px, 3.4vw, 42px); font-weight: 800; line-height: 1.05; }
 .ad-brand { font-weight: 700; font-size: 17px; }
-.ad.compact { min-height: 200px; padding: 24px; }
+.ad.compact { min-height: 200px; }
+.ad.compact .ad-body { padding: 24px; }
 .ad.compact .ad-headline { font-size: 26px; }
+.ad.compact .ad-img { aspect-ratio: 2 / 1; }
+.ad.compact.has-img .ad-headline { font-size: 22px; }
 .vote-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 20px; font-size: 14px; color: var(--muted); min-height: 44px; }
 .vote-foot strong { color: var(--text); }
 
